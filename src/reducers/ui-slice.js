@@ -6,6 +6,9 @@ const initialState = {
     success: false,
     message: '',
   },
+  dialog: {
+    open: false,
+  },
 };
 
 const uiSlice = createSlice({
@@ -19,11 +22,14 @@ const uiSlice = createSlice({
         state.snackbar.success = action.payload.success;
       }
     },
+    setDialog(state, action) {
+      state.dialog.open = action.payload;
+    },
   },
 });
 
 const { actions, reducer } = uiSlice;
 
-export const { setSnackbar } = actions;
+export const { setSnackbar, setDialog } = actions;
 
 export default reducer;
