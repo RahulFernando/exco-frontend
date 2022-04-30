@@ -13,6 +13,8 @@ import { setSnackbar } from '../../reducers/ui-slice';
 
 // selector
 import { snackbarSelector } from '../../selectors/ui-selector';
+import Dialog from '../dialog/Dialog';
+import AuthForm from '../authForm/AuthForm';
 
 const routes = [
   {
@@ -45,11 +47,14 @@ const Layout = () => {
     dispatch(setSnackbar({ open: false, message: '' }));
   };
 
-  const severity = snackbar.success ? 'success' : 'error'
+  const severity = snackbar.success ? 'success' : 'error';
 
   return (
     <>
       <Navbar />
+      <Dialog title="Login">
+        <AuthForm />
+      </Dialog>
       <Snackbar
         open={snackbar.open}
         autoHideDuration={3000}

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   AppBar,
   Container,
@@ -16,6 +17,11 @@ import { Menu as MenuIcon } from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import { NavLink } from 'react-router-dom';
 
+import AuthContext from '../../context/auth-context';
+
+// actions
+import { setDialog } from '../../reducers/ui-slice';
+
 const useStyles = makeStyles({
   link: {
     textDecoration: 'none',
@@ -30,13 +36,11 @@ const pages = [
   { id: 'p2', title: 'Reference', path: '/references' },
 ];
 
-const settings = [
-  { id: 's1', title: 'Profile', path: '/profile' },
-  { id: 's2', title: 'Logout' },
-];
-
 const Navbar = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+
+  const { user, logout } = useContext(AuthContext);
 
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
@@ -45,6 +49,10 @@ const Navbar = () => {
     setAnchorElNav(event.currentTarget);
   };
   const handleOpenUserMenu = (event) => {
+    if (user.user_name === null || user.user_name === undefined) {
+      dispatch(setDialog(true));
+      return;
+    }
     setAnchorElUser(event.currentTarget);
   };
 
@@ -55,6 +63,18 @@ const Navbar = () => {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const settings = [
+    // { id: 's1', title: 'Profile', path: '/profile' },
+    {
+      id: 's2',
+      title: 'Logout',
+      onClick: () => {
+        setAnchorElUser(null);
+        logout();
+      },
+    },
+  ];
 
   return (
     <AppBar position="static">
@@ -129,7 +149,13 @@ const Navbar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar
+                  alt="Remy Sharp"
+                  src={
+                    user.token &&
+                    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60'
+                  }
+                />
               </IconButton>
             </Tooltip>
             <Menu
@@ -148,7 +174,7 @@ const Navbar = () => {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <MenuItem key={setting.id} onClick={handleCloseUserMenu}>
+                <MenuItem key={setting.id} onClick={setting.onClick}>
                   <Typography textAlign="center">{setting.title}</Typography>
                 </MenuItem>
               ))}
