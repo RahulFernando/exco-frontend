@@ -1,16 +1,18 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Navbar from '../navbar/Navbar';
-import Lending from '../../pages/lending/Lending';
 import { Route, Routes } from 'react-router-dom';
 import { Snackbar } from '@mui/material';
 import MuiAlert from '@mui/material/Alert';
+
+import Navbar from '../navbar/Navbar';
+import Reference from '../../pages/reference/Reference';
+import Lending from '../../pages/lending/Lending';
 
 // actions
 import { setSnackbar } from '../../reducers/ui-slice';
 
 // selector
-import { snackbarSelector } from '../../reducers/ui-selector';
+import { snackbarSelector } from '../../selectors/ui-selector';
 
 const routes = [
   {
@@ -20,8 +22,13 @@ const routes = [
   },
   {
     id: 'r1',
-    path: '/lending',
+    path: '/lendings',
     element: <Lending />,
+  },
+  {
+    id: 'r1',
+    path: '/references',
+    element: <Reference />,
   },
 ];
 

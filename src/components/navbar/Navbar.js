@@ -26,8 +26,8 @@ const useStyles = makeStyles({
 });
 
 const pages = [
-  { id: 'p1', title: 'Lending', path: '/lending' },
-  { id: 'p2', title: 'Reference', path: '/reference' },
+  { id: 'p1', title: 'Lending', path: '/lendings' },
+  { id: 'p2', title: 'Reference', path: '/references' },
 ];
 
 const settings = [

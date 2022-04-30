@@ -11,7 +11,7 @@ import { fetchLendingStart } from '../../reducers/lending-slice';
 import {
   lendingDataSelector,
   lendingLoadingSelector,
-} from '../../reducers/lending-selector';
+} from '../../selectors/lending-selector';
 
 const Lending = () => {
   const dispatch = useDispatch();

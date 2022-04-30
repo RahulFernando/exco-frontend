@@ -17,9 +17,9 @@ const BookCard = ({ img, title }) => {
         component="img"
         image={img}
         alt={title}
+        height="200"
         style={{
           width: 'auto',
-          maxHeight: '200px',
           margin: 'auto'
         }}
       />
