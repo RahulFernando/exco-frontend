@@ -8,6 +8,7 @@ const initialState = {
   },
   dialog: {
     open: false,
+    type: 'LOGIN',
   },
 };
 
@@ -16,14 +17,16 @@ const uiSlice = createSlice({
   initialState,
   reducers: {
     setSnackbar(state, action) {
+      const success = action.payload.success ? action.payload.success : false;
       state.snackbar.open = action.payload.open;
       state.snackbar.message = action.payload.message;
-      if (action.payload.success) {
-        state.snackbar.success = action.payload.success;
-      }
+      state.snackbar.success = success;
     },
     setDialog(state, action) {
-      state.dialog.open = action.payload;
+      state.dialog.open = action.payload.open;
+      if (action.payload.type) {
+        state.dialog.type = action.payload.type;
+      }
     },
   },
 });

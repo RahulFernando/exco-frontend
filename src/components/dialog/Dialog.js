@@ -57,7 +57,7 @@ BootstrapDialogTitle.propTypes = {
 const Dialog = ({ title, children }) => {
   const dispatch = useDispatch();
 
-  const open = useSelector(dialogSelector);
+  const { open } = useSelector(dialogSelector);
 
   const closeHandler = () => {
     dispatch(setDialog(false));
