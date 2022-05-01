@@ -23,10 +23,9 @@ const uiSlice = createSlice({
       state.snackbar.success = success;
     },
     setDialog(state, action) {
+      const type = action.payload.type ? action.payload.type : 'LOGIN'
       state.dialog.open = action.payload.open;
-      if (action.payload.type) {
-        state.dialog.type = action.payload.type;
-      }
+      state.dialog.type = type;
     },
   },
 });
