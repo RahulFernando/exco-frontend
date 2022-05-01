@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Route, Routes } from 'react-router-dom';
 import { Snackbar } from '@mui/material';
@@ -7,14 +7,23 @@ import MuiAlert from '@mui/material/Alert';
 import Navbar from '../navbar/Navbar';
 import Reference from '../../pages/reference/Reference';
 import Lending from '../../pages/lending/Lending';
+import Dialog from '../dialog/Dialog';
+import AuthForm from '../authForm/AuthForm';
+import Cart from '../cart/Cart';
 
 // actions
 import { setSnackbar } from '../../reducers/ui-slice';
+import { addToCartReset, getCartStart } from '../../reducers/cart-slice';
 
 // selector
-import { snackbarSelector } from '../../selectors/ui-selector';
-import Dialog from '../dialog/Dialog';
-import AuthForm from '../authForm/AuthForm';
+import { snackbarSelector, dialogSelector } from '../../selectors/ui-selector';
+import { addToCartSelector } from '../../selectors/cart-selector';
+
+// context
+import AuthContext from '../../context/auth-context';
+
+// utils
+import { getUserDetails } from '../../helpers/util';
 
 const routes = [
   {
@@ -40,12 +49,31 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const Layout = () => {
   const dispatch = useDispatch();
+  const { user } = useContext(AuthContext);
 
   const snackbar = useSelector(snackbarSelector);
+  const dialog = useSelector(dialogSelector);
+  const cart = useSelector(addToCartSelector);
 
   const closeHandler = () => {
     dispatch(setSnackbar({ open: false, message: '' }));
   };
+  
+  const fetchCart = useCallback(async () => {
+    const { user_id } = await getUserDetails(user.token);
+    dispatch(getCartStart(user_id));
+  }, [dispatch, user.token])
+
+  useEffect(() => {
+    fetchCart();
+  }, [fetchCart]);
+
+  useEffect(() => {
+    if (cart.data) {
+      fetchCart()
+      dispatch(addToCartReset());
+    }
+  }, [cart, dispatch, fetchCart])
 
   const severity = snackbar.success ? 'success' : 'error';
 
@@ -53,7 +81,7 @@ const Layout = () => {
     <>
       <Navbar />
       <Dialog title="Login">
-        <AuthForm />
+        {dialog.type === 'LOGIN' ? <AuthForm /> : <Cart />}
       </Dialog>
       <Snackbar
         open={snackbar.open}

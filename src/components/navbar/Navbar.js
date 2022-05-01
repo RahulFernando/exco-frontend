@@ -13,7 +13,10 @@ import {
   Tooltip,
   Avatar,
 } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
+import {
+  Menu as MenuIcon,
+  ShoppingCart as CartIcon,
+} from '@mui/icons-material';
 import { makeStyles } from '@mui/styles';
 import { NavLink } from 'react-router-dom';
 
@@ -28,6 +31,11 @@ const useStyles = makeStyles({
     ' &:hover': {
       background: '#966e00',
     },
+  },
+  cartIcon: {
+    height: '35px',
+    width: '35px',
+    color: 'white',
   },
 });
 
@@ -50,7 +58,7 @@ const Navbar = () => {
   };
   const handleOpenUserMenu = (event) => {
     if (user.user_name === null || user.user_name === undefined) {
-      dispatch(setDialog(true));
+      dispatch(setDialog({ open: true }));
       return;
     }
     setAnchorElUser(event.currentTarget);
@@ -62,6 +70,10 @@ const Navbar = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const cartClickHandler = () => {
+    dispatch(setDialog({ open: true, type: 'CART' }));
   };
 
   const settings = [
@@ -147,6 +159,16 @@ const Navbar = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
+            {user.token && (
+              <Tooltip title="Open cart">
+                <IconButton
+                  sx={{ paddingRight: '2rem' }}
+                  onClick={cartClickHandler}
+                >
+                  <CartIcon className={classes.cartIcon} />
+                </IconButton>
+              </Tooltip>
+            )}
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar

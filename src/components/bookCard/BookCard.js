@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   CardMedia,
@@ -8,9 +9,27 @@ import {
   CardActions,
 } from '@mui/material';
 
+// components
 import Button from '../button/Button';
 
-const BookCard = ({ img, title }) => {
+// actions
+import { setDialog } from '../../reducers/ui-slice';
+
+import AuthContext from '../../context/auth-context';
+
+const BookCard = ({ img, title, onClick }) => {
+  const dispatch = useDispatch()
+  const { user } = useContext(AuthContext);
+
+  const bookClickHandler = () => {
+    if (!user.token) {
+      dispatch(setDialog({ open: true }));
+      return;
+    }
+
+    onClick();
+  }
+
   return (
     <Card sx={{ minHeight: '100%' }}>
       <CardMedia
@@ -29,7 +48,7 @@ const BookCard = ({ img, title }) => {
         </Typography>
       </CardContent>
       <CardActions sx={{ justifyContent: 'center' }}>
-        <Button label="Book" />
+        <Button label="Book" onClick={bookClickHandler} />
       </CardActions>
     </Card>
   );
@@ -38,6 +57,7 @@ const BookCard = ({ img, title }) => {
 BookCard.propTypes = {
   img: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired
 };
 
 export default BookCard;
