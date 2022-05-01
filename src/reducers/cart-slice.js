@@ -11,6 +11,11 @@ const initialState = {
     data: null,
     error: null,
   },
+  updateItem: {
+    loading: false,
+    data: null,
+    error: null,
+  },
 };
 
 const cartSlice = createSlice({
@@ -48,6 +53,19 @@ const cartSlice = createSlice({
       state.getCartData.data = null;
       state.getCartData.error = action.payload;
     },
+    updateItemStart(state) {
+      state.updateItem.loading = true;
+    },
+    updateItemSuccess(state, action) {
+      state.updateItem.loading = false;
+      state.updateItem.data = action.payload;
+      state.updateItem.error = null;
+    },
+    updateItemFail(state, action) {
+      state.updateItem.loading = false;
+      state.updateItem.data = null;
+      state.updateItem.error = action.payload;
+    },
   },
 });
 
@@ -61,6 +79,9 @@ export const {
   getCartStart,
   getCartSuccess,
   getCartFail,
+  updateItemStart,
+  updateItemSuccess,
+  updateItemFail,
 } = actions;
 
 export default reducer;

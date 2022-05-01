@@ -69,7 +69,31 @@ function* getCart({ payload }) {
   }
 }
 
+function* updateItem({ payload }) {
+  try {
+    const response = yield call(service.update, payload);
+
+    if (response.status === 200) {
+      yield put({
+        type: cartActions.updateItemSuccess,
+        payload: response.data,
+      });
+    } else {
+      yield put({
+        type: cartActions.updateItemFail.type,
+        payload: 'Something went wrong!',
+      });
+    }
+  } catch (error) {
+    yield put({
+      type: cartActions.updateItemFail.type,
+      payload: error.message,
+    });
+  }
+}
+
 export default function* watchers() {
   yield takeEvery(cartActions.addToCartStart.type, addToCart);
   yield takeEvery(cartActions.getCartStart.type, getCart);
+  yield takeEvery(cartActions.updateItemStart.type, updateItem);
 }

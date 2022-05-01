@@ -7,7 +7,7 @@ import { makeStyles } from '@mui/styles';
 import AuthContext from '../../context/auth-context';
 
 // util
-import { getUserDetails, daysRemains } from '../../helpers/util';
+import { daysRemains } from '../../helpers/util';
 
 const useStyles = makeStyles({
   image: {
@@ -28,10 +28,8 @@ const CartItem = ({ item }) => {
   );
 
   const fetchUserDetails = useCallback(async () => {
-    const { user_role } = await getUserDetails(user.token);
-
     // if user is student and book lending
-    if (user_role === 'student' && item.type === 1) {
+    if (user.user_role === 'student' && item.type === 1) {
       const from = new Date(item.date);
       const to = new Date().setDate(from.getDate() + 14);
 
@@ -39,7 +37,7 @@ const CartItem = ({ item }) => {
     }
 
     // if user is student and book reference
-    if (user_role === 'student' && item.type === 0) {
+    if (user.user_role === 'student' && item.type === 0) {
       const from = new Date(item.date);
       const to = new Date().setDate(from.getDate() + 1);
 
@@ -47,7 +45,7 @@ const CartItem = ({ item }) => {
     }
 
     // if user is faculty member and book lending
-    if (user_role === 'faculty_member' && item.type === 1) {
+    if (user.user_role === 'faculty_member' && item.type === 1) {
       const from = new Date(item.date);
       const to = new Date().setDate(from.getDate() + 30);
 
@@ -55,13 +53,13 @@ const CartItem = ({ item }) => {
     }
 
     // if user is faculty member and book reference
-    if (user_role === 'faculty_member' && item.type === 0) {
+    if (user.user_role === 'faculty_member' && item.type === 0) {
       const from = new Date(item.date);
       const to = new Date().setDate(from.getDate() + 3);
 
       setOverdue(daysRemains(from, to));
     }
-  }, [item.date, item.type, user.token]);
+  }, [item.date, item.type, user]);
 
   useEffect(() => {
     fetchUserDetails();
@@ -75,7 +73,7 @@ const CartItem = ({ item }) => {
     return () => {
       clearTimeout(id);
     };
-  });
+  }, [fetchUserDetails, item, overdue]);
 
   if (overdue?.days !== 0 && overdue?.hours !== 0) {
     content = (
